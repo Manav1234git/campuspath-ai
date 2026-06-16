@@ -1,3 +1,49 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class Profile(models.Model):
+    ROLE_CHOICES = [
+        ('ai_engineer', 'AI Engineer'),
+        ('ml_engineer', 'ML Engineer'),
+        ('data_scientist', 'Data Scientist'),
+        ('backend_developer', 'Backend Developer'),
+        ('full_stack_developer', 'Full Stack Developer'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    university = models.CharField(max_length=150)
+    branch = models.CharField(max_length=100)
+    semester = models.PositiveIntegerField()
+    target_role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    bio = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.full_name
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProfileSkill(models.Model):
+    LEVEL_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+    ]
+
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    proficiency_level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
+
+    class Meta:
+        unique_together = ('profile', 'skill')
+
+    def __str__(self):
+        return f"{self.profile.full_name} - {self.skill.name}"
