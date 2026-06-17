@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h2>{{ roadmap.title }}</h2>
+
+        <p><strong>Target Role:</strong> {{ roadmap.target_role }}</p>
+        <p><strong>Duration:</strong> {{ roadmap.duration_months }} months</p>
+        <p class="text-muted">
+            Created on {{ roadmap.created_at|date:"d M Y" }}
+        </p>
+
+        <a href="{% url 'add_milestone' roadmap.id %}" class="btn btn-primary">
+            Add Milestone
+        </a>
+    </div>
+</div>
+
+<h3>Milestones</h3>
+
+{% if milestones %}
+    {% for milestone in milestones %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Week {{ milestone.week_number }}: {{ milestone.title }}</h5>
+                <p>{{ milestone.description }}</p>
+
+                <a href="{% url 'edit_milestone' milestone.id %}" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_milestone' milestone.id %}" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning">
+        No milestones added yet.
+    </div>
+{% endif %}
+{% endblock %}

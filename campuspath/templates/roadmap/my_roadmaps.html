@@ -15,11 +15,17 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <h5>{{ roadmap.title }}</h5>
+
                         <p><strong>Target Role:</strong> {{ roadmap.target_role }}</p>
                         <p><strong>Duration:</strong> {{ roadmap.duration_months }} months</p>
+
                         <p class="text-muted">
                             Created on {{ roadmap.created_at|date:"d M Y" }}
                         </p>
+
+                        <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary btn-sm">
+                            View Details
+                        </a>
                     </div>
                 </div>
             </div>
