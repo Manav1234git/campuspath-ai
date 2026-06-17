@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Welcome, {{ request.user.username }}</h2>
+<p class="text-muted">This is your CampusPath AI dashboard.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Profile</h5>
+                <p>Create and update your academic profile.</p>
+                <a href="#" class="btn btn-primary btn-sm">Manage Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Roadmap</h5>
+                <p>Generate your AI-powered career roadmap.</p>
+                <a href="#" class="btn btn-success btn-sm">Create Roadmap</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Progress</h5>
+                <p>Track your learning and project progress.</p>
+                <a href="#" class="btn btn-warning btn-sm">View Progress</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
