@@ -15,13 +15,23 @@ class ProfileForm(forms.ModelForm):
         ]
 
         widgets = {
-            "full_name": forms.TextInput(attrs={"class": "form-control"}),
-            "university": forms.TextInput(attrs={"class": "form-control"}),
-            "branch": forms.TextInput(attrs={"class": "form-control"}),
-            "semester": forms.NumberInput(attrs={"class": "form-control"}),
-           "target_role": forms.TextInput(attrs={
-    "class": "form-control",
-    "placeholder": "Example: AI Engineer, Backend Developer, DevOps Engineer"
-}),
-            "bio": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+    "skill_name": forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Example: Python, Django, Java, Machine Learning"
+    }),
+    "proficiency_level": forms.Select(attrs={"class": "form-select"}),
+}
+
+
+from .models import Profile, ProfileSkill
+
+
+class ProfileSkillForm(forms.ModelForm):
+    class Meta:
+        model = ProfileSkill
+        fields = ["skill_name", "proficiency_level"]
+
+        widgets = {
+            "skill": forms.Select(attrs={"class": "form-select"}),
+            "proficiency_level": forms.Select(attrs={"class": "form-select"}),
         }

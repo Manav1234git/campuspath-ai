@@ -13,16 +13,21 @@
         <p><strong>Semester:</strong> {{ profile.semester }}</p>
         <p><strong>Target Role:</strong> {{ profile.target_role }} </p>
         <p><strong>Bio:</strong> {{ profile.bio }}</p>
-
+<a href="{% url 'my_skills' %}" class="btn btn-primary">
+    My Skills
+</a>
         <hr>
 
-        <a href="{% url 'edit_profile' %}" class="btn btn-warning">
-            Edit Profile
-        </a>
+       <hr>
 
-        <a href="{% url 'delete_profile' %}" class="btn btn-danger">
-            Delete Profile
-        </a>
+<a href="{% url 'edit_profile' %}" class="btn btn-warning">
+    Edit Profile
+</a>
+
+<a href="{% url 'delete_profile' %}" class="btn btn-danger">
+    Delete Profile
+</a>
+
 
     </div>
 </div>

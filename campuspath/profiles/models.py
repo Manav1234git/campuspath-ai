@@ -17,11 +17,7 @@ class Profile(models.Model):
         return self.full_name
 
 
-class Skill(models.Model):
-    name = models.CharField(max_length=100, unique=True)
 
-    def __str__(self):
-        return self.name
 
 
 class ProfileSkill(models.Model):
@@ -32,11 +28,16 @@ class ProfileSkill(models.Model):
     ]
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    proficiency_level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
 
-    class Meta:
-        unique_together = ('profile', 'skill')
+    skill_name = models.CharField(max_length=100)
+
+    proficiency_level = models.CharField(
+        max_length=20,
+        choices=LEVEL_CHOICES
+    )
+
+class Meta:
+    unique_together = ('profile', 'skill_name')
 
     def __str__(self):
         return f"{self.profile.full_name} - {self.skill.name}"
