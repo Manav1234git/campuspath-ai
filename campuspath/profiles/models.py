@@ -3,20 +3,13 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
-    ROLE_CHOICES = [
-        ('ai_engineer', 'AI Engineer'),
-        ('ml_engineer', 'ML Engineer'),
-        ('data_scientist', 'Data Scientist'),
-        ('backend_developer', 'Backend Developer'),
-        ('full_stack_developer', 'Full Stack Developer'),
-    ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
     university = models.CharField(max_length=150)
     branch = models.CharField(max_length=100)
     semester = models.PositiveIntegerField()
-    target_role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    target_role = models.CharField(max_length=100)
     bio = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
