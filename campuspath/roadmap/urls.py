@@ -9,4 +9,16 @@ urlpatterns = [
     path("<int:roadmap_id>/milestone/add/", views.add_milestone, name="add_milestone"),
 path("milestone/<int:pk>/edit/", views.edit_milestone, name="edit_milestone"),
 path("milestone/<int:pk>/delete/", views.delete_milestone, name="delete_milestone"),
+
+path("milestone/<int:milestone_id>/task/add/", views.add_task, name="add_task"),
+path("task/<int:pk>/toggle/", views.toggle_task, name="toggle_task"),
+path("task/<int:pk>/delete/", views.delete_task, name="delete_task"),
+path("task/<int:pk>/edit/", views.edit_task, name="edit_task"),
+
+path("<int:pk>/edit/", views.edit_roadmap, name="edit_roadmap"),
+path("<int:pk>/delete/", views.delete_roadmap, name="delete_roadmap"),
+
+path("<int:roadmap_id>/course/add/", views.add_course, name="add_course"),
+path("course/<int:pk>/edit/", views.edit_course, name="edit_course"),
+path("course/<int:pk>/delete/", views.delete_course, name="delete_course"),
 ]

@@ -23,6 +23,16 @@
                             Created on {{ roadmap.created_at|date:"d M Y" }}
                         </p>
 
+                        <p><strong>Progress:</strong> {{ roadmap.progress }}%</p>
+
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success"
+                                 role="progressbar"
+                                 style="width: {{ roadmap.progress }}%;">
+                                {{ roadmap.progress }}%
+                            </div>
+                        </div>
+
                         <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary btn-sm">
                             View Details
                         </a>
@@ -32,8 +42,10 @@
         {% endfor %}
     </div>
 {% else %}
+
     <div class="alert alert-warning">
         No roadmaps created yet.
     </div>
+
 {% endif %}
 {% endblock %}

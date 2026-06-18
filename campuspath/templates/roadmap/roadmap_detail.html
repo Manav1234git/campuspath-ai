@@ -7,13 +7,30 @@
 
         <p><strong>Target Role:</strong> {{ roadmap.target_role }}</p>
         <p><strong>Duration:</strong> {{ roadmap.duration_months }} months</p>
+        <p class="text-muted">Created on {{ roadmap.created_at|date:"d M Y" }}</p>
+
+        <p><strong>Progress:</strong> {{ progress }}%</p>
+
+        <div class="progress mb-3">
+            <div class="progress-bar bg-success"
+                 role="progressbar"
+                 style="width: {{ progress }}%"
+                 aria-valuenow="{{ progress }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+                {{ progress }}%
+            </div>
+        </div>
+
         <p class="text-muted">
-            Created on {{ roadmap.created_at|date:"d M Y" }}
+            {{ completed_tasks }} of {{ total_tasks }} tasks completed
         </p>
 
-        <a href="{% url 'add_milestone' roadmap.id %}" class="btn btn-primary">
-            Add Milestone
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'add_milestone' roadmap.id %}" class="btn btn-primary">Add Milestone</a>
+            <a href="{% url 'edit_roadmap' roadmap.id %}" class="btn btn-warning">Edit Roadmap</a>
+            <a href="{% url 'delete_roadmap' roadmap.id %}" class="btn btn-danger">Delete Roadmap</a>
+        </div>
     </div>
 </div>
 
@@ -23,16 +40,50 @@
     {% for milestone in milestones %}
         <div class="card shadow-sm mb-3">
             <div class="card-body">
-                <h5>Week {{ milestone.week_number }}: {{ milestone.title }}</h5>
-                <p>{{ milestone.description }}</p>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5>Week {{ milestone.week_number }}: {{ milestone.title }}</h5>
+                        <p>{{ milestone.description }}</p>
+                    </div>
 
-                <a href="{% url 'edit_milestone' milestone.id %}" class="btn btn-warning btn-sm">
-                    Edit
-                </a>
+                    <div>
+                        <a href="{% url 'edit_milestone' milestone.id %}" class="btn btn-warning btn-sm me-2">Edit</a>
+                        <a href="{% url 'delete_milestone' milestone.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
 
-                <a href="{% url 'delete_milestone' milestone.id %}" class="btn btn-danger btn-sm">
-                    Delete
-                </a>
+                <hr>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6>Tasks</h6>
+                    <a href="{% url 'add_task' milestone.id %}" class="btn btn-primary btn-sm">Add Task</a>
+                </div>
+
+                {% if milestone.task_set.all %}
+                    {% for task in milestone.task_set.all %}
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                            <div>
+                                {% if task.is_completed %}
+                                    <span class="text-success">✅</span>
+                                    <span class="text-decoration-line-through">{{ task.title }}</span>
+                                {% else %}
+                                    <span>⬜</span>
+                                    <span>{{ task.title }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <a href="{% url 'toggle_task' task.id %}" class="btn btn-outline-success btn-sm me-2">
+                                    {% if task.is_completed %}Undo{% else %}Complete{% endif %}
+                                </a>
+                                <a href="{% url 'edit_task' task.id %}" class="btn btn-warning btn-sm me-2">Edit</a>
+                                <a href="{% url 'delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No tasks added yet.</p>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
@@ -41,4 +92,40 @@
         No milestones added yet.
     </div>
 {% endif %}
+
+<hr class="my-4">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Course Recommendations</h3>
+    <a href="{% url 'add_course' roadmap.id %}" class="btn btn-primary btn-sm">Add Course</a>
+</div>
+
+{% if courses %}
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5>{{ course.title }}</h5>
+                        <p><strong>Platform:</strong> {{ course.platform }}</p>
+
+                        {% if course.link %}
+                            <a href="{{ course.link }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">
+                                Open Course
+                            </a>
+                        {% endif %}
+
+                        <a href="{% url 'edit_course' course.id %}" class="btn btn-warning btn-sm me-1">Edit</a>
+                        <a href="{% url 'delete_course' course.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        No course recommendations added yet.
+    </div>
+{% endif %}
+
 {% endblock %}
