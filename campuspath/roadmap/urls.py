@@ -21,4 +21,11 @@ path("<int:pk>/delete/", views.delete_roadmap, name="delete_roadmap"),
 path("<int:roadmap_id>/course/add/", views.add_course, name="add_course"),
 path("course/<int:pk>/edit/", views.edit_course, name="edit_course"),
 path("course/<int:pk>/delete/", views.delete_course, name="delete_course"),
+
+path("<int:roadmap_id>/project/add/", views.add_project, name="add_project"),
+path("project/<int:pk>/edit/", views.edit_project, name="edit_project"),
+path("project/<int:pk>/delete/", views.delete_project, name="delete_project"),
+
+path("course/<int:pk>/toggle/", views.toggle_course, name="toggle_course"),
+path("project/<int:pk>/toggle/", views.toggle_project, name="toggle_project"),
 ]

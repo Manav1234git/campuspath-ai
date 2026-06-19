@@ -1,40 +1,98 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome, {{ request.user.username }}</h2>
-<p class="text-muted">This is your CampusPath AI dashboard.</p>
+<h2 class="mb-2">Welcome, {{ request.user.username }}</h2>
+<p class="text-muted mb-4">Track your skills, roadmaps, tasks, courses, and projects.</p>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5>Overall Progress</h5>
+        <h2>{{ overall_progress }}%</h2>
+
+        <div class="progress">
+            <div class="progress-bar bg-success"
+                 role="progressbar"
+                 style="width: {{ overall_progress }}%;">
+                {{ overall_progress }}%
+            </div>
+        </div>
+
+        <p class="text-muted mt-2">
+            {{ completed_tasks }} of {{ total_tasks }} roadmap tasks completed
+        </p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h3>{{ total_skills }}</h3>
+                <p class="text-muted mb-0">Skills Added</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h3>{{ total_roadmaps }}</h3>
+                <p class="text-muted mb-0">Roadmaps</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h3>{{ completed_courses }}</h3>
+                <p class="text-muted mb-0">Courses Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h3>{{ completed_projects }}</h3>
+                <p class="text-muted mb-0">Projects Completed</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
                 <h5>Profile</h5>
                 <p>Create and update your academic profile.</p>
-             <a href="{% url 'my_profile' %}" class="btn btn-primary btn-sm">
-    Manage Profile
-</a>
+
+                {% if profile %}
+                    <a href="{% url 'my_profile' %}" class="btn btn-primary btn-sm">Manage Profile</a>
+                {% else %}
+                    <a href="{% url 'create_profile' %}" class="btn btn-primary btn-sm">Create Profile</a>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
-                <h5>Roadmap</h5>
-                <p>Generate your AI-powered career roadmap.</p>
-               <a href="{% url 'my_roadmaps' %}" class="btn btn-success btn-sm">
-    My Roadmaps
-</a>
+                <h5>Roadmaps</h5>
+                <p>Create and manage your learning roadmaps.</p>
+                <a href="{% url 'my_roadmaps' %}" class="btn btn-success btn-sm">My Roadmaps</a>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
-                <h5>Progress</h5>
-                <p>Track your learning and project progress.</p>
-                <a href="#" class="btn btn-warning btn-sm">View Progress</a>
+                <h5>AI Generator</h5>
+                <p>Generate roadmap automatically using AI.</p>
+                <a href="#" class="btn btn-warning btn-sm">Coming Soon</a>
             </div>
         </div>
     </div>

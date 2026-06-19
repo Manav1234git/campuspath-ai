@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from profiles.models import Profile
-from .models import Roadmap, Milestone, Task, CourseRecommendation
-from .forms import RoadmapForm, MilestoneForm, TaskForm, CourseRecommendationForm
+from .models import Roadmap, Milestone, Task, CourseRecommendation, ProjectRecommendation
+from .forms import RoadmapForm, MilestoneForm, TaskForm, CourseRecommendationForm, ProjectRecommendationForm
 from django.utils import timezone
 
 @login_required
@@ -47,6 +47,12 @@ def roadmap_detail(request, pk):
     roadmap = Roadmap.objects.get(id=pk, profile=profile)
     milestones = Milestone.objects.filter(roadmap=roadmap).order_by("week_number")
     courses = CourseRecommendation.objects.filter(roadmap=roadmap)
+    projects = ProjectRecommendation.objects.filter(roadmap=roadmap)
+    total_courses = courses.count()
+    completed_courses = courses.filter(is_completed=True).count()
+
+    total_projects = projects.count()
+    completed_projects = projects.filter(is_completed=True).count()
 
     total_tasks = Task.objects.filter(milestone__roadmap=roadmap).count()
     completed_tasks = Task.objects.filter(
@@ -69,6 +75,11 @@ def roadmap_detail(request, pk):
             "completed_tasks": completed_tasks,
             "progress": progress,
             "courses": courses,
+            "projects": projects,
+            "total_courses": total_courses,
+            "completed_courses": completed_courses,
+            "total_projects": total_projects,
+            "completed_projects": completed_projects,
         }
     )
 
@@ -257,3 +268,91 @@ def delete_course(request, pk):
         return redirect("roadmap_detail", pk=roadmap_id)
 
     return render(request, "roadmap/delete_course.html", {"course": course})
+
+@login_required
+def add_project(request, roadmap_id):
+    profile = Profile.objects.get(user=request.user)
+    roadmap = Roadmap.objects.get(id=roadmap_id, profile=profile)
+
+    if request.method == "POST":
+        form = ProjectRecommendationForm(request.POST)
+
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.roadmap = roadmap
+            project.save()
+            return redirect("roadmap_detail", pk=roadmap.id)
+    else:
+        form = ProjectRecommendationForm()
+
+    return render(request, "roadmap/add_project.html", {"form": form, "roadmap": roadmap})
+
+
+@login_required
+def edit_project(request, pk):
+    profile = Profile.objects.get(user=request.user)
+    project = ProjectRecommendation.objects.get(id=pk, roadmap__profile=profile)
+
+    if request.method == "POST":
+        form = ProjectRecommendationForm(request.POST, instance=project)
+
+        if form.is_valid():
+            form.save()
+            return redirect("roadmap_detail", pk=project.roadmap.id)
+    else:
+        form = ProjectRecommendationForm(instance=project)
+
+    return render(request, "roadmap/edit_project.html", {"form": form})
+
+
+@login_required
+def delete_project(request, pk):
+    profile = Profile.objects.get(user=request.user)
+    project = ProjectRecommendation.objects.get(id=pk, roadmap__profile=profile)
+    roadmap_id = project.roadmap.id
+
+    if request.method == "POST":
+        project.delete()
+        return redirect("roadmap_detail", pk=roadmap_id)
+
+    return render(request, "roadmap/delete_project.html", {"project": project})
+
+@login_required
+def toggle_course(request, pk):
+    profile = Profile.objects.get(user=request.user)
+
+    course = CourseRecommendation.objects.get(
+        id=pk,
+        roadmap__profile=profile
+    )
+
+    course.is_completed = not course.is_completed
+
+    if course.is_completed:
+        course.completed_at = timezone.now()
+    else:
+        course.completed_at = None
+
+    course.save()
+
+    return redirect("roadmap_detail", pk=course.roadmap.id)
+
+@login_required
+def toggle_project(request, pk):
+    profile = Profile.objects.get(user=request.user)
+
+    project = ProjectRecommendation.objects.get(
+        id=pk,
+        roadmap__profile=profile
+    )
+
+    project.is_completed = not project.is_completed
+
+    if project.is_completed:
+        project.completed_at = timezone.now()
+    else:
+        project.completed_at = None
+
+    project.save()
+
+    return redirect("roadmap_detail", pk=project.roadmap.id)

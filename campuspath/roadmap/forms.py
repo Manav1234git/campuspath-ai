@@ -1,5 +1,5 @@
 from django import forms
-from .models import Roadmap, Milestone, Task, CourseRecommendation
+from .models import Roadmap, Milestone, Task, CourseRecommendation, ProjectRecommendation
 
 
 class RoadmapForm(forms.ModelForm):
@@ -54,4 +54,18 @@ class CourseRecommendationForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "platform": forms.TextInput(attrs={"class": "form-control"}),
             "link": forms.URLInput(attrs={"class": "form-control"}),
+        }
+
+class ProjectRecommendationForm(forms.ModelForm):
+    class Meta:
+        model = ProjectRecommendation
+        fields = ["title", "description", "difficulty_level"]
+
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+            "difficulty_level": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Example: Beginner, Intermediate, Advanced"
+            }),
         }

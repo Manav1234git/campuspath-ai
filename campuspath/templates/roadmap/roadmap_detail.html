@@ -26,6 +26,29 @@
             {{ completed_tasks }} of {{ total_tasks }} tasks completed
         </p>
 
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="alert alert-success">
+            <strong>Tasks:</strong><br>
+            {{ completed_tasks }}/{{ total_tasks }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="alert alert-info">
+            <strong>Courses:</strong><br>
+            {{ completed_courses }}/{{ total_courses }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="alert alert-warning">
+            <strong>Projects:</strong><br>
+            {{ completed_projects }}/{{ total_projects }}
+        </div>
+    </div>
+</div>
+
         <div class="d-flex gap-2">
             <a href="{% url 'add_milestone' roadmap.id %}" class="btn btn-primary">Add Milestone</a>
             <a href="{% url 'edit_roadmap' roadmap.id %}" class="btn btn-warning">Edit Roadmap</a>
@@ -106,7 +129,11 @@
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h5>{{ course.title }}</h5>
+                       {% if course.is_completed %}
+    <h5 class="text-decoration-line-through">{{ course.title }}</h5>
+{% else %}
+    <h5>{{ course.title }}</h5>
+{% endif %}
                         <p><strong>Platform:</strong> {{ course.platform }}</p>
 
                         {% if course.link %}
@@ -117,6 +144,13 @@
 
                         <a href="{% url 'edit_course' course.id %}" class="btn btn-warning btn-sm me-1">Edit</a>
                         <a href="{% url 'delete_course' course.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{% url 'toggle_course' course.id %}" class="btn btn-outline-success btn-sm">
+    {% if course.is_completed %}
+        Undo
+    {% else %}
+        Complete
+    {% endif %}
+</a>
                     </div>
                 </div>
             </div>
@@ -127,5 +161,58 @@
         No course recommendations added yet.
     </div>
 {% endif %}
+<hr class="my-4">
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Project Recommendations</h3>
+
+    <a href="{% url 'add_project' roadmap.id %}" class="btn btn-primary btn-sm">
+        Add Project
+    </a>
+</div>
+
+{% if projects %}
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                 {% if project.is_completed %}
+    <h5 class="text-decoration-line-through">{{ project.title }}</h5>
+{% else %}
+    <h5>{{ project.title }}</h5>
+{% endif %}
+
+                        <p>{{ project.description }}</p>
+
+                        <span class="badge bg-info text-dark mb-3">
+                            {{ project.difficulty_level }}
+                        </span>
+
+                        <br>
+
+                        <a href="{% url 'edit_project' project.id %}" class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+
+                        <a href="{% url 'delete_project' project.id %}" class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                        <a href="{% url 'toggle_project' project.id %}" class="btn btn-outline-success btn-sm">
+    {% if project.is_completed %}
+        Undo
+    {% else %}
+        Complete
+    {% endif %}
+</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        No project recommendations added yet.
+    </div>
+{% endif %}
 {% endblock %}

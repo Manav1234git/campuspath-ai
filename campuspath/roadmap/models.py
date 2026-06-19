@@ -38,6 +38,8 @@ class ProjectRecommendation(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     difficulty_level = models.CharField(max_length=50)
+    is_completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -48,6 +50,8 @@ class CourseRecommendation(models.Model):
     title = models.CharField(max_length=150)
     platform = models.CharField(max_length=100)
     link = models.URLField(blank=True)
+    is_completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
